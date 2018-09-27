@@ -1,0 +1,24 @@
+blockingQueue
+阻塞队列
+
+队列慢的时候  入队会阻塞
+队列空的时候  出队会阻塞
+
+生产者消费者的应用场景。
+
+
+insert 插入
+Remove移除
+Examine检查
+有四套方法的实现。
+
+
+实现类：
+ArrayBlockingQueue 要初始化大小的
+DelayQueue 有排序
+LinkedBlockingQueue 链表 大小可以指定也可以是无限大
+PriorityBlockingQueue 没有边界 可以查询空对象 有优先级顺序的
+SynchronousQueue: 只能容纳一个任务 无界非缓存的队列 可以理解为同步队列
+
+
+它会自带线程之间等待唤醒的功能，可以只关注业务的场景书写。

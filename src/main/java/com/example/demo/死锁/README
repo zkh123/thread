@@ -1,0 +1,47 @@
+条件：
+1, 互斥条件
+2, 请求和保持条件
+3, 不剥夺条件
+4, 环路等待条件
+
+
+如何避免死锁：
+1, 加锁顺序 要一直。
+2, 加锁添加时间限制 超过时间 自动释放锁资源。ReentrantLock 可以添加时间限制。
+3, 写检测死锁的程序。
+
+
+总结多线程并发最佳实践：
+1, 使用本地变量。
+2, 使用比可变类。
+3, 最小化锁的作用域范围。
+4, 使用线程池
+5, 尽量不是使用wait和notify
+   使用同步工具类，CountDownLatch Semaphore CyclicBarrier等等
+6, 使用BlockingQueue实现生产-消费模式。
+7, 使用并发集合而不是使用加了锁的同步集合。(java 五大并发集合)
+   ConcurrentHashMap：线程安全的HashMap的实现
+   CopyOnWriteArrayList：线程安全且在读操作时无锁的ArrayList  (读很多 写很少的场景)
+   CopyOnWriteArraySet：基于CopyOnWriteArrayList，不添加重复元素
+   ArrayBlockingQueue：基于数组、先进先出、线程安全，可实现指定时间的阻塞读写，并且容量可以限制
+   LinkedBlockingQueue：基于链表实现，读写各用一把锁，在高并发读写操作都多的情况下，性能优于ArrayBlockingQueue
+8, 使用Semaphore创建有界的访问
+   对数据库 文件系统 和 socket等资源 必须要做有界的访问。
+   可以控制同时访问资源的线程并发数。
+9, 宁可使用同步代码块，也不使用同步的方法。
+   主要针对Synchronized关键字的
+   Synchronized代码块只会锁定一个对象，而不会将整个方法锁定
+   如果要更改共同的变量和类的字段首先应该选择原子性的变量，然后使用volatile关键字
+   如果想控制锁 也可以考虑使用ReentrantLock
+10, 避免使用静态变量
+    静态变量在并发的情况下会制造很多问题，如果必须使用静态变量 首先使其成为final变量
+    如果是用来保存集合collection时  我们可以考虑使用只读集合
+     List stuff = Arrays.asList(new String[] { "a", "b" });//stuff只读
+            try {
+                stuff.add("C");
+            } catch (Exception e) {
+                System.out.println(e.getClass().getName());
+            }
+            List list = new ArrayList(stuff);
+            list = Collections.unmodifiableList(list);//list只读
+     否则就要做很多同步处理 以及 并发处理。

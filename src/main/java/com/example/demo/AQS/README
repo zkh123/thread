@@ -1,0 +1,83 @@
+aqs 是 juc的核心
+提供了队列 -- 锁 和 同步框架的 基础框架
+
+
+组件
+CountDownLatch: 同步辅助类。  这个计数器不能再次赋值的。
+实际案例：并行计算--汇总  每一个请求是一个线程去处理，然后都处理完 再汇总。
+Semaphore: 信号量 aqs中的同步组件
+可以控制同一时间 并发线程的数目
+它们一般是同步组合使用的。
+
+锁：
+ReentrantLock
+Condition
+FutureTask---Runnable
+
+
+
+线程安全性：
+1，单个线程 和 多个线程 执行的结果是一样的
+2，同一时间 共同资源 只能被一个线程访问到。
+
+无锁机制： volatile和atomic 关键字
+有锁机制：synchronized
+
+阻塞式线程安全队列： FIFO  先进先出
+
+队列装满了-put->需要阻塞 等待 (此时不能抛异常,等待有位置了 再put)  等待 wait join
+队列没有东西了-get-> 需要阻塞 等待 (此时不能抛异常,等待有动了 再get)  唤醒 wait notify
+synchronized 关键字 加锁
+类锁 方法锁
+
+有锁 就执行，没有锁 就等待。
+
+wait, notify ----> synchronized
+
+notify 是不会释放锁的。
+wait释放锁。
+要结合synchronized关键字结合起来使用。
+
+FIFO：
+BlockingQueque
+
+锁的粒度。
+会影响到性能和效率的。
+
+线程间通信  wait notify 阻塞式
+线程安全  synchronized
+
+
+
+java中锁 进行梳理：
+一种是synchronized关键字 提供的锁 这是jvm的  (也是可重入锁)
+另一种是juc提供的锁 核心锁是 ReentrantLock  就是lock() 和 unLock()   (也是可重入锁)
+
+ReentrantLock 和 synchronized的区别：
+1,都是可重入性  拿到锁计数器加1 要等待计数器降为0时 才会释放锁
+2,锁的实现， synchronized 是jvm实现的；而ReentrantLock 是juc (jdk)实现的
+            源码很难知道的               可以阅读源码知道
+3,更推荐使用synchronized
+4,synchronized它是在编译器的时候 保证锁的实现的
+  ReentrantLock需要我们手动去加锁 释放锁 来实现的，操作相对麻烦一些。
+  最要要在finally中去释放锁 避免出现死锁的现象
+5,在锁的粒度上: ReentrantLock 要更由于synchronized的
+synchronized 利于使用jdk的监控工具查看。
+
+6,ReentrantLock独立的功能：可指定是公平锁和非公平锁
+  synchronized只能是非公平锁
+  公平锁：先等待的线程 先获得锁
+  非公平锁：
+7,ReentrantLock 提供了一个Condition类 就是条件的意思。
+  可以实现分组唤醒需要唤醒的线程，而synchronized是随机唤醒一个线程要么唤醒所有线程。
+8,ReentrantLock 提供了一种中断等待线程的机制,通过lock.lockInterruptibly()来实现这个机制,
+  是一种自选锁 通过循环调用cas操作来实现加锁。
+(一般在6,7,8这几种情况下 我们推荐使用ReentrantLock锁)
+
+
+ReentrantReadWriteLock: 没有任何读写锁的时候 才能获取写锁。
+实现悲观读取
+
+使用参看：
+1, 线程数比较少的时候 我们推荐使用synchronized锁
+2, 当线程数不少的时候，但是我们可以预期到的时候，ReentrantLock可以推荐使用。

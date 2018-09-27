@@ -1,0 +1,14 @@
+获取线程执行之后 得到任务执行的结果
+
+Callable与Runnable 功能大致是一致的 但Callable功能稍微强大一些
+Callable 泛型接口 call(T t)
+1,线程执行之后 有返回值
+2,可以抛出异常
+Runnable 接口 只要一个方法
+
+Future 接口
+可以监视目标线程调用call的情况 调用Future的get 方法时  就可以获取它的结果。此时如果线程没有
+执行完成 就会进行阻塞 直到call方法结束 返回结果 线程才会继续执行
+(futrue可以得到别的线程任务方法的返回值)
+
+FutureTask类 实现Runnable和Callable的接口。

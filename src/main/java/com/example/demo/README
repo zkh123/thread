@@ -1,0 +1,9 @@
+同步容器
+
+ArrayList --> Vector 加了synchronized关键字
+              Stack  栈  先进先出
+
+HashMap --> HashTable (key,value不能为null)
+
+
+Collentions.synchronizedXXX(List,Set,Map)
